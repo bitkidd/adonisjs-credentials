@@ -1,0 +1,71 @@
+{
+  "name": "adonis-credentials",
+  "version": "1.0.0",
+  "description": "A credentials provider for Adonis 5.x",
+  "main": "index.js",
+  "devDependencies": {
+    "@adonisjs/core": "^5.1.7",
+    "@adonisjs/mrm-preset": "^4.0.1",
+    "@adonisjs/require-ts": "^2.0.4",
+    "@types/node": "^15.6.1",
+    "commitizen": "^4.2.4",
+    "cz-conventional-changelog": "^3.3.0",
+    "del-cli": "^3.0.1",
+    "doctoc": "^2.0.0",
+    "eslint": "^7.27.0",
+    "eslint-config-prettier": "^8.3.0",
+    "eslint-plugin-adonis": "^1.3.1",
+    "eslint-plugin-prettier": "^3.4.0",
+    "github-label-sync": "^2.0.0",
+    "husky": "^6.0.0",
+    "japa": "^3.1.1",
+    "mrm": "^3.0.2",
+    "np": "^7.5.0",
+    "prettier": "^2.3.0",
+    "typescript": "^4.3.2"
+  },
+  "scripts": {
+    "mrm": "mrm --preset=@adonisjs/mrm-preset",
+    "pretest": "npm run lint",
+    "test": "node japaFile.js",
+    "clean": "del build",
+    "compile": "npm run lint && npm run clean && tsc",
+    "build": "npm run compile",
+    "prepublishOnly": "npm run build",
+    "lint": "eslint . --ext=.ts",
+    "format": "prettier --write .",
+    "commit": "git-cz",
+    "release": "np",
+    "version": "npm run build",
+    "sync-labels": "github-label-sync --labels ./node_modules/@adonisjs/mrm-preset/gh-labels.json bitkidd/adonis-credentials"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/bitkidd/adonis-credentials.git"
+  },
+  "keywords": [
+    "adonis",
+    "credentials",
+    "secrets"
+  ],
+  "author": "cc@bitkidd.dev",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/bitkidd/adonis-credentials/issues"
+  },
+  "homepage": "https://github.com/bitkidd/adonis-credentials#readme",
+  "files": [
+    "build/src",
+    "build/index.d.ts",
+    "build/index.js"
+  ],
+  "config": {
+    "commitizen": {
+      "path": "cz-conventional-changelog"
+    }
+  },
+  "np": {
+    "contents": ".",
+    "anyBranch": false
+  }
+}

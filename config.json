@@ -1,0 +1,9 @@
+{
+  "core": false,
+  "license": "MIT",
+  "services": [],
+  "minNodeVersion": "14.17.0",
+  "probotApps": [
+    "stale"
+  ]
+}
