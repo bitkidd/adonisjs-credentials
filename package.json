@@ -1,8 +1,9 @@
 {
-  "name": "adonis-credentials",
+  "name": "@bitkidd/adonis-credentials",
   "version": "1.0.0",
   "description": "A credentials provider for Adonis 5.x",
-  "main": "index.js",
+  "types": "build/adonis-typings/index.d.ts",
+  "main": "build/providers/CredentialsProvider.js",
   "devDependencies": {
     "@adonisjs/core": "^5.1.7",
     "@adonisjs/mrm-preset": "^4.0.1",
@@ -67,5 +68,11 @@
   "np": {
     "contents": ".",
     "anyBranch": false
+  },
+  "adonisjs": {
+    "types": "@bitkidd/adonis-credentials",
+    "providers": [
+      "@bitkidd/adonis-credentials"
+    ]
   }
 }
