@@ -17,7 +17,7 @@ export class Credentials implements CredentialsContract {
   private env = process.env.NODE_ENV || 'development'
   private credentialsPath = join('resources', 'credentials')
   private content: string = ''
-  private credentials: Object | null = null
+  private credentials: Object = {}
 
   constructor(args?: { env?: string; credentialsPath?: string }) {
     this.env = args?.env || this.env
@@ -50,36 +50,41 @@ export class Credentials implements CredentialsContract {
     this.content = decryptedContent
   }
 
-  private parse() {
-    let result = {}
-    const recurse = (obj, current?: string) => {
-      for (var key in obj) {
-        const value = obj[key]
-        const newKey = current ? current + '_' + key : key
-        if (value && typeof value === 'object') {
-          recurse(value, newKey)
-        } else {
-          result[newKey.toUpperCase()] = value
-        }
+  private validate() {
+    try {
+      JSON.parse(this.content)
+    } catch (error) {
+      throw new Exception(
+        `Credentials file for '${this.env}' environment is corrupted, should be a valid JSON`,
+        500,
+        'E_CREDENTIALS_WRONG_FORMAT'
+      )
+    }
+  }
+
+  private parse(obj?: Object, current?: string) {
+    const object = obj || JSON.parse(this.content)
+    for (var key in object) {
+      const value = object[key]
+      const newKey = current ? current + '_' + key : key
+      if (value && typeof value === 'object') {
+        this.parse(value, newKey)
+      } else {
+        this.credentials[newKey.toUpperCase()] = value
       }
     }
-
-    recurse(JSON.parse(this.content))
-
-    this.credentials = result
   }
 
   private populate() {
-    console.log('POPULATED', this.credentials)
+    for (let key in this.credentials) {
+      process.env[key] = this.credentials[key]
+    }
   }
 
-  public initialize(callback?: Function): void {
+  public initialize(): void {
     this.read()
+    this.validate()
     this.parse()
     this.populate()
-
-    callback && callback()
-
-    console.log('Initialized development credentials store.')
   }
 }

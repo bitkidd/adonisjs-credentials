@@ -1,6 +1,6 @@
 declare module '@ioc:Adonis/Addons/Credentials' {
   export interface CredentialsContract {
-    initialize(callback?: Function): void
+    initialize(): void
   }
 
   export abstract class VaultContract {
