@@ -66,11 +66,17 @@ test.group('Command - Credentials Create', (group) => {
     const command = new CredentialsCreate(app, new Kernel(app))
     await command.run()
 
-    assert.deepStrictEqual(command.ui.testingRenderer.logs, [
-      {
-        stream: 'stderr',
-        message: `[ red(error) ]  Credentials files for 'test' environment already exist`,
-      },
-    ])
+    assert.deepStrictEqual(
+      command.ui.testingRenderer.logs.map((log) => ({
+        ...log,
+        message: log.message.replace(/(\[.*?\])/g, '').trim(),
+      })),
+      [
+        {
+          stream: 'stderr',
+          message: `Credentials files for 'test' environment already exist`,
+        },
+      ]
+    )
   })
 })
