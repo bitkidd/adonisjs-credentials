@@ -11,7 +11,7 @@ import { spawn } from 'child_process'
 import { BaseCommand, args } from '@adonisjs/core/build/standalone'
 import { Vault } from '../src/Vault'
 
-export default class CredentialsCreate extends BaseCommand {
+export default class CredentialsEdit extends BaseCommand {
   public static commandName = 'credentials:edit'
   public static description = 'Edit a credentials file'
   public static settings = {

@@ -47,6 +47,8 @@ new Credentials().initialize() // <--- Here
 new Ignitor(__dirname).httpServer().start().catch(console.error)
 ```
 
+It has to be done to populate values before Adonis starts and Env provider validates values.
+
 ## Usage
 
 #### Creating credentials
@@ -61,8 +63,8 @@ node ace credentials:create development
 
 This will create a new directory in your `resources` folder, called `credentials` and will add there two new files, `development.key` and `development.credentials`. Obviously the `.key` file keeps your password to the credentials file, **do not commit any .key files to your git repo**, please check your `.gitignore` for `*.key` exclusion rule.
 
-The `.key` should be kept somewhere in a secret place, the best spot I know is a sticky note on your laptop. No.
-Keep your secrets secret, use password managers.
+The `.key` should be kept somewhere in a secret place, the best spot I know is a sticky note on your laptop. Just NO, don't do this :see_no_evil:.
+Keep your secrets secure and use password managers!
 
 The `.credentials` file can be committed and shared as it is impossimple to decrypt it without the password.
 
@@ -86,7 +88,7 @@ This will decrypt the credentials file, create a temporary one and open it in th
 
 You can have multiple credential files, the best way to work is to create one for each environment, development, production, staging, test and etc.
 
-As for development you can keep `.key` files inside `/credentials` folder, in production environment this is not an option.
+As for development you can keep `.key` files inside `/credentials` folder, in production environment this is not a great option.
 
 You should use and set additional environment variable `ADONIS_CREDENTIALS_KEY`, that will be used to decrypt data and populate it to your app.
 
