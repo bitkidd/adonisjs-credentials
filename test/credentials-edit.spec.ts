@@ -36,7 +36,7 @@ test.group('Command - Credentials Edit', (group) => {
     const command = new CredentialsEdit(app, new Kernel(app))
     await command.run()
 
-    assert.deepEqual(command.ui.testingRenderer.logs, [
+    assert.deepStrictEqual(command.ui.testingRenderer.logs, [
       {
         stream: 'stderr',
         message: `[ red(error) ]  Credentials key file for 'test' environment does not exist`,
@@ -50,24 +50,11 @@ test.group('Command - Credentials Edit', (group) => {
     const command = new CredentialsEdit(app, new Kernel(app))
     await command.run()
 
-    assert.deepEqual(command.ui.testingRenderer.logs, [
+    assert.deepStrictEqual(command.ui.testingRenderer.logs, [
       {
         stream: 'stderr',
         message: `[ red(error) ]  Credentials file for 'test' environment does not exist`,
       },
     ])
   })
-
-  // test('should throw an error when credentials file does not exist', async (assert) => {
-  //   const command = new CredentialsEdit(app, new Kernel(app))
-  //   command.editor = 'nano'
-  //   await command.run()
-
-  //   // assert.deepEqual(command.ui.testingRenderer.logs, [
-  //   //   {
-  //   //     stream: 'stderr',
-  //   //     message: `[ red(error) ]  Credentials file for 'test' environment does not exist`,
-  //   //   },
-  //   // ])
-  // })
 })

@@ -15,6 +15,7 @@ import { ApplicationContract } from '@ioc:Adonis/Core/Application'
 
 import CredentialsCreate from '../commands/CredentialsCreate'
 import { fs, setupApplication } from '../test-helpers'
+import { deepStrictEqual } from 'assert'
 
 let app: ApplicationContract
 
@@ -65,7 +66,7 @@ test.group('Command - Credentials Create', (group) => {
     const command = new CredentialsCreate(app, new Kernel(app))
     await command.run()
 
-    assert.deepEqual(command.ui.testingRenderer.logs, [
+    assert.deepStrictEqual(command.ui.testingRenderer.logs, [
       {
         stream: 'stderr',
         message: `[ red(error) ]  Credentials files for 'test' environment already exist`,
