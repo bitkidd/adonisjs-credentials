@@ -80,6 +80,7 @@
     ]
   },
   "dependencies": {
-    "@poppinss/utils": "^3.2.0"
+    "@poppinss/utils": "^3.2.0",
+    "dotenv": "^10.0.0"
   }
 }

@@ -8,27 +8,39 @@
  */
 
 import fs from 'fs'
+import dotenv from 'dotenv'
 import { join } from 'path'
 import { Exception } from '@poppinss/utils'
 import { CredentialsContract } from '@ioc:Adonis/Addons/Credentials'
 import { Vault } from '../Vault'
 
 export class Credentials implements CredentialsContract {
-  private env = process.env.NODE_ENV || 'development'
+  private env = 'development'
+  private key: string | null = null
+  private keyParam = 'ADONIS_CREDENTIALS_KEY'
   private credentialsPath = join('resources', 'credentials')
   private content: string = ''
   private credentials: Object = {}
 
-  constructor(args?: { env?: string; credentialsPath?: string }) {
-    this.env = args?.env || this.env
-    this.credentialsPath = args?.credentialsPath || this.credentialsPath
+  constructor(args?: {
+    env?: string
+    key?: string
+    dotenvPath?: string
+    credentialsPath?: string
+  }) {
+    if (!process.env.ENV_SILENT) {
+      dotenv.config({ path: args?.dotenvPath || join(process.cwd(), '.env') })
+    }
 
-    if (
-      !fs.existsSync(`${this.credentialsPath}/${this.env}.key`) ||
-      process.env.ADONIS_CREDENTIALS_KEY
-    ) {
+    this.env = args?.env || process.env.NODE_ENV || this.env
+    this.key = args?.key || process.env[this.keyParam] || this.key
+    this.credentialsPath = args?.credentialsPath || this.credentialsPath
+  }
+
+  private check() {
+    if (!this.key && !fs.existsSync(`${this.credentialsPath}/${this.env}.key`)) {
       throw new Exception(
-        `Credentials key file for '${this.env}' environment does not exist`,
+        `Credentials key for '${this.env}' environment does not exist, please set it in a file or in ADONIS_CREDENTIALS_KEY environment variable`,
         500,
         'E_CREDENTIALS_NO_KEY'
       )
@@ -44,7 +56,7 @@ export class Credentials implements CredentialsContract {
   }
 
   private read() {
-    const key = fs.readFileSync(`${this.credentialsPath}/${this.env}.key`)
+    const key = this.key || fs.readFileSync(`${this.credentialsPath}/${this.env}.key`)
     const content = fs.readFileSync(`${this.credentialsPath}/${this.env}.credentials`)
     const decryptedContent = Vault.decrypt(content.toString('utf-8'), key.toString('utf-8'))
     this.content = decryptedContent
@@ -82,6 +94,7 @@ export class Credentials implements CredentialsContract {
   }
 
   public initialize(): void {
+    this.check()
     this.read()
     this.validate()
     this.parse()
