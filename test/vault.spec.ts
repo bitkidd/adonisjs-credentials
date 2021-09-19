@@ -14,16 +14,11 @@ import { Vault } from '../src/Vault'
 test.group('Vault', () => {
   let encrypted = ''
 
-  test('should through an error without key set', (assert) => {
+  test('should through an error when trying to encrypt with no key set', (assert) => {
     assert.throw(
       () => Vault.encrypt('Test Message'),
-      'E_CREDENTIALS_KEY_NOT_SET: Credentials key is not set, please specify it in ADONIS_CREDENTIALS_KEY environment variable'
+      'Vault key is not set, please specify it before trying to encrypt'
     )
-  })
-
-  test('should pick up key from environment', (assert) => {
-    process.env.ADONIS_CREDENTIALS_KEY = 'Test Key'
-    assert.isString(Vault.encrypt('Test Message'))
   })
 
   test('should pick up key from argument', (assert) => {
@@ -43,17 +38,24 @@ test.group('Vault', () => {
     assert.equal(Vault.decrypt(encrypted, 'Test Key'), 'Test Message')
   })
 
+  test('should throw an error when trying to decrypt with no key set', (assert) => {
+    assert.throw(
+      () => Vault.decrypt(encrypted),
+      'Vault key is not set, please specify it before trying to decrypt'
+    )
+  })
+
   test('should throw an error when wrong key', (assert) => {
     assert.throw(
       () => Vault.decrypt(encrypted, 'Wrong Key'),
-      'E_CREDENTIALS_DECRYPT: Credentials are wrong or corrupted, unable to decrypt'
+      'Vault is unable to decrypt, credentials are wrong or corrupted'
     )
   })
 
   test('should throw an error when corrupted content', (assert) => {
     assert.throw(
       () => Vault.decrypt('Corrupted Content', 'Test Key'),
-      'E_CREDENTIALS_DECRYPT: Credentials are wrong or corrupted, unable to decrypt'
+      'Vault is unable to decrypt, credentials are wrong or corrupted'
     )
   })
 })
