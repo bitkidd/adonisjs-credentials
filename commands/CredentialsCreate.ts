@@ -8,24 +8,30 @@
  */
 
 import fs from 'fs'
-import { BaseCommand, args } from '@adonisjs/core/build/standalone'
+import { BaseCommand, flags } from '@adonisjs/core/build/standalone'
 import { Vault } from '../src/Vault'
 
 export default class CredentialsCreate extends BaseCommand {
   public static commandName = 'credentials:create'
   public static description = 'Create a credentials file'
 
-  @args.string({
+  @flags.string({
     description: 'Specify an environment for credentials file (default: development)',
   })
-  public env?: string
+  public env: string
+
+  @flags.string({
+    description: 'Specify initial content for credentials file (default: { "hello": "world" })',
+  })
+  public content: string
 
   public async run(): Promise<void> {
     const env = this.env || process.env.NODE_ENV || 'development'
+    const initialContent = this.content || '{ "hello": "world" }'
     const credentialsPath = this.application.resourcesPath('credentials')
 
     const key = Vault.generateKey()
-    const content = Vault.encrypt('{ "hello": "world" }', key)
+    const content = Vault.encrypt(initialContent, key)
 
     if (
       fs.existsSync(`${credentialsPath}/${env}.key`) ||

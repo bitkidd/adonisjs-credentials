@@ -8,7 +8,7 @@
  */
 import fs, { promises as fsp } from 'fs'
 import { spawn } from 'child_process'
-import { BaseCommand, args } from '@adonisjs/core/build/standalone'
+import { BaseCommand, flags } from '@adonisjs/core/build/standalone'
 import { Vault } from '../src/Vault'
 
 export default class CredentialsEdit extends BaseCommand {
@@ -19,15 +19,15 @@ export default class CredentialsEdit extends BaseCommand {
     stayAlive: true,
   }
 
-  @args.string({
-    description: 'Specify an editor to use for edit',
-  })
-  public editor?: string
-
-  @args.string({
+  @flags.string({
     description: 'Specify an environment for credentials file (default: development)',
   })
-  public env?: string
+  public env: string
+
+  @flags.string({
+    description: 'Specify an editor to use for edit',
+  })
+  public editor: string
 
   public async run(): Promise<void> {
     const env = this.env || process.env.NODE_ENV || 'development'

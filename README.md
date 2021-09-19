@@ -56,9 +56,13 @@ It has to be done to populate values before Adonis starts and Env provider valid
 As you configured the provider, you may now create your first credentials file by running the command:
 
 ```bash
-# node ace credentials:create [environment]
+# node ace credentials:create
+# ---
+# Flags
+#   --env string      Specify an environment for credentials file (default: development)
+#   --content string  Specify initial content for credentials file (default: { "hello": "world" })
 
-node ace credentials:create development
+node ace credentials:create
 ```
 
 This will create a new directory in your `resources` folder, called `credentials` and will add there two new files, `development.key` and `development.credentials`. Obviously the `.key` file keeps your password to the credentials file, **do not commit any .key files to your git repo**, please check your `.gitignore` for `*.key` exclusion rule.
@@ -75,11 +79,15 @@ There two files should be always kept in one folder while in development.
 To edit a newly created file, you should run a command:
 
 ```bash
-# node ace credentials:edit [editor] [environment]
+# node ace credentials:edit
+# ---
+# Flags
+#   --env string     Specify an environment for credentials file (default: development)
+#   --editor string  Specify an editor to use for edit
 
-node ace credentials:edit "code ---wait" development
+node ace credentials:edit --editor="code ---wait" --env=development
 # or
-node ace credentials:edit nano development
+node ace credentials:edit --editor=nano --env=development
 ```
 
 This will decrypt the credentials file, create a temporary one and open it in the editor you specified. As you finish editing, close the file (or tab inside your editor), this will encrypt it back again and remove the temporary file, to keep you safe and sound.
