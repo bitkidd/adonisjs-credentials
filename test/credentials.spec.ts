@@ -57,6 +57,23 @@ test.group('Credentials', (group) => {
     )
   })
 
+  test('should throw an error when credentials file is corrupted', async (assert) => {
+    await fs.cleanup()
+
+    const subcommand = new CredentialsCreate(app, new Kernel(app))
+    subcommand.content = '{ "hello": invalid_json'
+    await subcommand.run()
+
+    assert.throw(
+      () =>
+        new Credentials({
+          env: 'test',
+          credentialsPath: app.resourcesPath('/credentials'),
+        }).initialize(),
+      `E_CREDENTIALS_WRONG_FORMAT: Credentials file for 'test' environment is corrupted, should be a valid JSON`
+    )
+  })
+
   test('should initialize and populate environment variables', async (assert) => {
     new Credentials({
       env: 'test',
