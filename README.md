@@ -15,7 +15,7 @@
 # Adonis Credentials
 > adonis, credentials
 
-[![npm-image]][npm-url] [![license-image]][license-url] [![typescript-image]][typescript-url]
+[![workflow-image]][workflow-url] [![npm-image]][npm-url] [![license-image]][license-url] [![typescript-image]][typescript-url]
 
 Adonis Credentials is created to help manage multiple environment secrets, share them securely and even keep them inside your repo. 
 It is heavily insiped by [Rails Credentials](https://edgeguides.rubyonrails.org/security.html#environmental-security).
@@ -123,6 +123,9 @@ GOOGLE_SECRET=your_google_secret
 ```
 
 And then populated to `process.env`, as this is done before Adonis.js `Env` provider, you may even validate data to be sure that everything is present and has an exact format.
+
+[workflow-image]: https://img.shields.io/github/workflow/status/bitkidd/adonis-credentials/test?style=for-the-badge&logo=github
+[workflow-url]: https://github.com/bitkidd/adonis-credentials/actions/workflows/test.yml
 
 [npm-image]: https://img.shields.io/npm/v/@bitkidd/adonis-credentials.svg?style=for-the-badge&logo=npm
 [npm-url]: https://npmjs.org/package/@bitkidd/adonis-credentials "npm"
