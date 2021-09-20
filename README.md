@@ -4,6 +4,11 @@
 
 - [Adonis Credentials](#adonis-credentials)
   - [Installation](#installation)
+  - [Configuration](#configuration)
+      - [Run `ace configure`](#run-ace-configure)
+      - [Modify `server.ts` file](#modify-serverts-file)
+      - [Modify `ace` file](#modify-ace-file)
+      - [Modify `.adonisrs.json`](#modify-adonisrsjson)
   - [Usage](#usage)
       - [Creating credentials](#creating-credentials)
       - [Editing credentials](#editing-credentials)
@@ -17,8 +22,7 @@
 
 [![workflow-image]][workflow-url] [![npm-image]][npm-url] [![license-image]][license-url] [![typescript-image]][typescript-url]
 
-Adonis Credentials is created to help manage multiple environment secrets, share them securely and even keep them inside your repo. 
-It is heavily insiped by [Rails Credentials](https://edgeguides.rubyonrails.org/security.html#environmental-security).
+Adonis Credentials is created to help manage multiple environment secrets, share them securely and even keep them inside your repo.
 
 ## Installation
 
@@ -29,25 +33,54 @@ npm install @bitkidd/adonis-credentials
 yarn add @bitkidd/adonis-credentials
 ```
 
-And then:
+## Configuration
+
+To configure credentials provider, we should proceed with 4 steps:
+
+#### Run `ace configure`
+
 ```
 node ace configure @bitkidd/adonis-credentials
 ```
 
 This will add two new commands to your app and will allow to create and edit credentials.
+At the same time it will add a new rule to your `.gitignore` file that will exclude all `*.key` files from repository and will not allow to commit them.
 
-As a next step you need to modify the `server.ts` file. Add a new line inside it, just before the `Ignitor`:
+#### Modify `server.ts` file
+
+As a next step you need to modify the `server.ts` file and add a new line inside it, just before the `Ignitor`:
 
 ```ts
+// This goes on top, where import declarations are
 import { Credentials } from '@bitkidd/adonis-credentials/build/src/Credentials'
 
 // ...
 
-new Credentials().initialize() // <--- Here
+new Credentials().initialize() // <--- Insert credentials initialization here, before the Ignitor
 new Ignitor(__dirname).httpServer().start().catch(console.error)
 ```
 
-It has to be done to populate values before Adonis starts and Env provider validates values.
+This allows the credentials to be parsed and populated inside current `process.env` before the app even starts, so an `Env` provider will be able to validate values.
+
+#### Modify `ace` file
+
+In this step you do basically the same thing as done in a step above, but for `ace` commands that need the app to be loaded, just add two new lines to the file.
+
+```js
+// ...
+// This goes on top, where require declarations are
+const { Credentials } = require('@bitkidd/adonis-credentials/build/src/Credentials')
+
+// ...
+
+new Credentials().initialize() // <--- Insert credentials initialization here, before the Ignitor
+new Ignitor(__dirname)
+  .ace()
+  .handle(process.argv.slice(2))
+  .catch(console.error)
+```
+
+#### Modify `.adonisrs.json`
 
 As a final step, open `.adonisrc.json` file and add `resources/credentials` to `metaFiles` section, so credentials will copied as you build your Adonis app.
 
