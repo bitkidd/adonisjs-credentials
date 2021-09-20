@@ -36,7 +36,7 @@ node ace configure @bitkidd/adonis-credentials
 
 This will add two new commands to your app and will allow to create and edit credentials.
 
-Then you need to open `server.ts` file and add there a new line, just before the `Ignitor`:
+As a next step you need to modify the `server.ts` file. Add a new line inside it, just before the `Ignitor`:
 
 ```ts
 import { Credentials } from '@bitkidd/adonis-credentials/build/src/Credentials'
@@ -49,11 +49,13 @@ new Ignitor(__dirname).httpServer().start().catch(console.error)
 
 It has to be done to populate values before Adonis starts and Env provider validates values.
 
+As a final step, open `.adonisrc.json` file and add `resources/credentials` to `metaFiles` section, so credentials will copied as you build your Adonis app.
+
 ## Usage
 
 #### Creating credentials
 
-As you configured the provider, you may now create your first credentials file by running the command:
+As you configured the provider, you may now create your first credentials by running the command:
 
 ```bash
 # node ace credentials:create
@@ -72,7 +74,7 @@ Keep your secrets secure and use password managers!
 
 The `.credentials` file can be committed and shared as it is impossimple to decrypt it without the password.
 
-There two files should be always kept in one folder while in development.
+These two files should always be kept in one folder while in development.
 
 #### Editing credentials
 
@@ -94,11 +96,11 @@ This will decrypt the credentials file, create a temporary one and open it in th
 
 #### Using in production
 
-You can have multiple credential files, the best way to work is to create one for each environment, development, production, staging, test and etc.
+You can have multiple credential files, the best way to work is to create one for each environment, for example: development, production, staging, test and etc.
 
-As for development you can keep `.key` files inside `/credentials` folder, in production environment this is not a great option.
+As for development you can keep `.key` files inside `/credentials` folder, in a production environment this is not a great option.
 
-You should use and set additional environment variable `APP_CREDENTIALS_KEY`, that will be used to decrypt data and populate it to your app.
+For production you should set additional environment variable `APP_CREDENTIALS_KEY`, that will be used to decrypt data and populate it to your app.
 
 ## How it works
 
