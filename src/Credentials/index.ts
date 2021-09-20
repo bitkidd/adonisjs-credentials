@@ -11,6 +11,7 @@ import fs from 'fs'
 import dotenv from 'dotenv'
 import { join } from 'path'
 import { Exception } from '@poppinss/utils'
+import { string } from '@poppinss/utils/build/helpers'
 import { CredentialsContract } from '@ioc:Adonis/Addons/Credentials'
 import { Vault } from '../Vault'
 
@@ -82,7 +83,7 @@ export class Credentials implements CredentialsContract {
       if (value && typeof value === 'object') {
         this.parse(value, newKey)
       } else {
-        this.credentials[newKey.toUpperCase()] = value
+        this.credentials[string.snakeCase(newKey).toUpperCase()] = value
       }
     }
   }
