@@ -1,6 +1,6 @@
 {
   "name": "@bitkidd/adonis-credentials",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "description": "A credentials provider for Adonis 5.x",
   "types": "build/adonis-typings/index.d.ts",
   "main": "build/providers/CredentialsProvider.js",

@@ -100,10 +100,12 @@ As you configured the provider, you may now create your first credentials by run
 node ace credentials:create
 ```
 
-This will create a new directory in your `resources` folder, called `credentials` and will add there two new files, `development.key` and `development.credentials`. Obviously the `.key` file keeps your password to the credentials file, **do not commit any .key files to your git repo**, please check your `.gitignore` for `*.key` exclusion rule.
+This will create a new directory in your `resources` folder, called `credentials` and will add there two new files, `development.key` and `development.credentials`. 
 
-The `.key` should be kept somewhere in a secret place, the best spot I know is a sticky note on your laptop. Just NO, don't do this :see_no_evil:.
-Keep your secrets secure and use password managers!
+Obviously, the `.key` file keeps your password to the credentials file, **do not commit any .key files to your git repo**, please check your `.gitignore` for `*.key` exclusion rule.
+
+The `.key` should be kept somewhere in a secret place, the best spot I know is a sticky note on your laptop. Just NO, don't do this :see_no_evil:
+Keep your secrets in a secure place and use password managers!
 
 The `.credentials` file can be committed and shared as it is impossimple to decrypt it without the password.
 
