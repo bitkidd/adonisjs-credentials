@@ -15,7 +15,6 @@ import { ApplicationContract } from '@ioc:Adonis/Core/Application'
 
 import CredentialsCreate from '../commands/CredentialsCreate'
 import { fs, setupApplication } from '../test-helpers'
-import { deepStrictEqual } from 'assert'
 
 let app: ApplicationContract
 

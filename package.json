@@ -1,6 +1,6 @@
 {
   "name": "@bitkidd/adonis-credentials",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "A credentials provider for Adonis 5.x",
   "types": "build/adonis-typings/index.d.ts",
   "main": "build/providers/CredentialsProvider.js",
@@ -9,9 +9,11 @@
     "@adonisjs/core": "^5.3.4",
     "@adonisjs/mrm-preset": "^4.1.2",
     "@adonisjs/require-ts": "^2.0.8",
+    "@adonisjs/sink": "^5.1.6",
     "@poppinss/dev-utils": "^1.1.5",
     "@types/node": "^16.9.1",
     "commitizen": "^4.2.4",
+    "copyfiles": "^2.4.1",
     "cz-conventional-changelog": "^3.3.0",
     "del-cli": "^4.0.1",
     "doctoc": "^2.0.1",
@@ -33,7 +35,8 @@
     "pretest": "npm run lint",
     "test": "node japaFile.js",
     "clean": "del build",
-    "compile": "npm run lint && npm run clean && tsc",
+    "copyfiles": "copyfiles \"templates/**/*.txt\" \"instructions.md\" build",
+    "compile": "npm run lint && npm run clean && tsc && npm run copyfiles",
     "build": "npm run compile",
     "prepublishOnly": "npm run build",
     "lint": "eslint . --ext=.ts",
@@ -74,6 +77,8 @@
   },
   "adonisjs": {
     "types": "@bitkidd/adonis-credentials",
+    "instructions": "./build/instructions.js",
+    "instructionsMd": "./build/instructions.md",
     "commands": [
       "@bitkidd/adonis-credentials/build/commands/CredentialsCreate",
       "@bitkidd/adonis-credentials/build/commands/CredentialsEdit"
