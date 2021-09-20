@@ -1,6 +1,6 @@
 {
   "name": "@bitkidd/adonis-credentials",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "A credentials provider for Adonis 5.x",
   "types": "build/adonis-typings/index.d.ts",
   "main": "build/providers/CredentialsProvider.js",
@@ -35,7 +35,7 @@
     "pretest": "npm run lint",
     "test": "node japaFile.js",
     "clean": "del build",
-    "copyfiles": "copyfiles \"templates/**/*.txt\" \"instructions.md\" build",
+    "copyfiles": "copyfiles \"instructions.md\" build",
     "compile": "npm run lint && npm run clean && tsc && npm run copyfiles",
     "build": "npm run compile",
     "prepublishOnly": "npm run build",
@@ -62,9 +62,12 @@
   },
   "homepage": "https://github.com/bitkidd/adonis-credentials#readme",
   "files": [
+    "build/adonis-typings",
+    "build/commands",
+    "build/providers",
     "build/src",
-    "build/index.d.ts",
-    "build/index.js"
+    "build/instructions.js",
+    "build/instructions.md"
   ],
   "config": {
     "commitizen": {
