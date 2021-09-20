@@ -16,12 +16,13 @@ import { CredentialsContract } from '@ioc:Adonis/Addons/Credentials'
 import { Vault } from '../Vault'
 
 export class Credentials implements CredentialsContract {
+  private initialized = false
   private env = 'development'
   private key: string | null = null
   private keyParam = 'APP_CREDENTIALS_KEY'
   private credentialsPath = join('resources', 'credentials')
   private content: string = ''
-  private credentials: Object = {}
+  private credentials: Record<string, string> = {}
 
   constructor(args?: {
     env?: string
@@ -94,11 +95,25 @@ export class Credentials implements CredentialsContract {
     }
   }
 
+  public get(key?: string): string | Record<string, string> {
+    if (!this.initialized) {
+      this.initialize()
+    }
+
+    if (key) {
+      return this.credentials[key]
+    } else {
+      return this.credentials
+    }
+  }
+
   public initialize(): void {
     this.check()
     this.read()
     this.validate()
     this.parse()
     this.populate()
+
+    this.initialized = true
   }
 }

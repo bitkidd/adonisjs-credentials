@@ -1,5 +1,6 @@
 declare module '@ioc:Adonis/Addons/Credentials' {
   export interface CredentialsContract {
+    get(key?: string): string | Record<string, string>
     initialize(): void
   }
 

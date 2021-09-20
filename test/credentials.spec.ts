@@ -83,6 +83,24 @@ test.group('Credentials', (group) => {
     assert.equal(process.env.HELLO, 'world')
   })
 
+  test('should pick up key from credentials and return in', async (assert) => {
+    const credentials = new Credentials({
+      env: 'test',
+      credentialsPath: app.resourcesPath('/credentials'),
+    })
+
+    assert.equal(credentials.get('HELLO'), 'world')
+  })
+
+  test('should pick up all keys from credentials and return them', async (assert) => {
+    const credentials = new Credentials({
+      env: 'test',
+      credentialsPath: app.resourcesPath('/credentials'),
+    })
+
+    assert.deepStrictEqual(credentials.get(), { HELLO: 'world' })
+  })
+
   test('should throw an error when no credentials key', async (assert) => {
     await fs.remove('resources/credentials/test.key')
 
