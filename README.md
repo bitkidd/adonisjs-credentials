@@ -98,7 +98,7 @@ You can have multiple credential files, the best way to work is to create one fo
 
 As for development you can keep `.key` files inside `/credentials` folder, in production environment this is not a great option.
 
-You should use and set additional environment variable `ADONIS_CREDENTIALS_KEY`, that will be used to decrypt data and populate it to your app.
+You should use and set additional environment variable `APP_CREDENTIALS_KEY`, that will be used to decrypt data and populate it to your app.
 
 ## How it works
 

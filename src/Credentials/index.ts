@@ -18,7 +18,7 @@ import { Vault } from '../Vault'
 export class Credentials implements CredentialsContract {
   private env = 'development'
   private key: string | null = null
-  private keyParam = 'ADONIS_CREDENTIALS_KEY'
+  private keyParam = 'APP_CREDENTIALS_KEY'
   private credentialsPath = join('resources', 'credentials')
   private content: string = ''
   private credentials: Object = {}
@@ -41,7 +41,7 @@ export class Credentials implements CredentialsContract {
   private check() {
     if (!this.key && !fs.existsSync(`${this.credentialsPath}/${this.env}.key`)) {
       throw new Exception(
-        `Credentials key for '${this.env}' environment does not exist, please set it in a file or in ADONIS_CREDENTIALS_KEY environment variable`,
+        `Credentials key for '${this.env}' environment does not exist, please set it in a file or in ${this.keyParam} environment variable`,
         500,
         'E_CREDENTIALS_NO_KEY'
       )

@@ -26,7 +26,7 @@ test.group('Credentials', (group) => {
     command = new CredentialsCreate(app, new Kernel(app))
 
     // process.env.ENV_SILENT = 'true'
-    delete process.env.ADONIS_CREDENTIALS_KEY
+    delete process.env.APP_CREDENTIALS_KEY
     await command.run()
   })
 
@@ -44,7 +44,7 @@ test.group('Credentials', (group) => {
   })
 
   test('should pick up key from process.env and populate environment variables', async (assert) => {
-    process.env.ADONIS_CREDENTIALS_KEY = await fs.get('resources/credentials/test.key')
+    process.env.APP_CREDENTIALS_KEY = await fs.get('resources/credentials/test.key')
     await fs.remove('resources/credentials/test.key')
 
     new Credentials({
@@ -59,7 +59,7 @@ test.group('Credentials', (group) => {
     const key = await fs.get('resources/credentials/test.key')
     await fs.remove('resources/credentials/test.key')
 
-    await fs.add('.env', `ADONIS_CREDENTIALS_KEY=${key}`)
+    await fs.add('.env', `APP_CREDENTIALS_KEY=${key}`)
 
     new Credentials({
       env: 'test',
@@ -92,7 +92,7 @@ test.group('Credentials', (group) => {
           env: 'test',
           credentialsPath: app.resourcesPath('/credentials'),
         }).initialize(),
-      `E_CREDENTIALS_NO_KEY: Credentials key for 'test' environment does not exist, please set it in a file or in ADONIS_CREDENTIALS_KEY environment variable`
+      `E_CREDENTIALS_NO_KEY: Credentials key for 'test' environment does not exist, please set it in a file or in APP_CREDENTIALS_KEY environment variable`
     )
   })
 
