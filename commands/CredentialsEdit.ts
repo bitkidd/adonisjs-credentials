@@ -6,8 +6,9 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
+
+import execa from 'execa'
 import fs, { promises as fsp } from 'fs'
-import { spawn } from 'child_process'
 import { BaseCommand, flags } from '@adonisjs/core/build/standalone'
 import { Vault } from '../src/Vault'
 
@@ -56,16 +57,9 @@ export default class CredentialsEdit extends BaseCommand {
 
     await fsp.writeFile(tmpFilePath, decryptedContent, 'utf-8')
 
-    const shell = spawn(editor, [tmpFilePath, ...params], { stdio: 'inherit' })
+    try {
+      await execa(editor, [tmpFilePath, ...params], { stdio: 'inherit' })
 
-    shell.on('error', async () => {
-      await fsp.unlink(tmpFilePath)
-
-      this.logger.error(`Editor failed to open credentials file for '${env}' environment`)
-      await this.exit()
-    })
-
-    shell.on('close', async () => {
       const tmpContent = await fsp.readFile(tmpFilePath, 'utf-8')
       const tmpEncryptedContent = Vault.encrypt(tmpContent, key.toString('utf-8'))
 
@@ -74,6 +68,13 @@ export default class CredentialsEdit extends BaseCommand {
 
       this.logger.success(`Credentials file for '${env}' environment was successfully updated`)
       await this.exit()
-    })
+    } catch (error) {
+      console.log(error)
+
+      await fsp.unlink(tmpFilePath)
+
+      this.logger.error(`Editor failed to open credentials file for '${env}' environment`)
+      await this.exit()
+    }
   }
 }
