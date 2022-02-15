@@ -35,22 +35,12 @@ export default class CredentialsPipe extends BaseCommand {
     const [command, ...params] = this.command?.split(' ')
     const credentialsPath = this.application.resourcesPath('credentials')
 
-    if (!fs.existsSync(`${credentialsPath}/${env}.key`)) {
-      this.logger.error(`Credentials key file for '${env}' environment does not exist`)
-      return
-    }
-
-    if (!fs.existsSync(`${credentialsPath}/${env}.credentials`)) {
-      this.logger.error(`Credentials file for '${env}' environment does not exist`)
-      return
-    }
-
-    const credentials = new Credentials({ env, credentialsPath })
+    const credentials = new Credentials({ env, credentialsPath }).get()
 
     try {
       await execa.node(command, [...params], {
         stdio: 'inherit',
-        env: { ...(credentials.get() as Record<string, string>) },
+        env: { ...(credentials as Record<string, string>) },
       })
     } catch (error) {
       console.log(error)

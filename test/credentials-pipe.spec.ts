@@ -35,20 +35,15 @@ test.group('Command - Credentials Pipe', (group) => {
 
     const command = new CredentialsPipe(app, new Kernel(app))
     command.command = `echo 'test';`
-    await command.run()
 
-    assert.deepStrictEqual(
-      command.ui.testingRenderer.logs.map((log) => ({
-        ...log,
-        message: log.message.replace(/(\[.*?\])/g, '').trim(),
-      })),
-      [
-        {
-          stream: 'stderr',
-          message: `Credentials key file for 'test' environment does not exist`,
-        },
-      ]
-    )
+    try {
+      await command.run()
+    } catch (error) {
+      assert.equal(
+        error.message,
+        `E_CREDENTIALS_NO_KEY: Credentials key for 'test' environment does not exist, please set it in a file or in APP_CREDENTIALS_KEY environment variable`
+      )
+    }
   })
 
   test('should throw an error when credentials file does not exist', async (assert) => {
@@ -56,19 +51,14 @@ test.group('Command - Credentials Pipe', (group) => {
 
     const command = new CredentialsPipe(app, new Kernel(app))
     command.command = `echo 'test';`
-    await command.run()
 
-    assert.deepStrictEqual(
-      command.ui.testingRenderer.logs.map((log) => ({
-        ...log,
-        message: log.message.replace(/(\[.*?\])/g, '').trim(),
-      })),
-      [
-        {
-          stream: 'stderr',
-          message: `Credentials file for 'test' environment does not exist`,
-        },
-      ]
-    )
+    try {
+      await command.run()
+    } catch (error) {
+      assert.equal(
+        error.message,
+        `E_CREDENTIALS_NO_FILE: Credentials file for 'test' environment does not exist`
+      )
+    }
   })
 })
