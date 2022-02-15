@@ -15,6 +15,7 @@ jobs:
           node-version: 14.x
 
       - run: npm install
+      - run: npm lint
       - run: npm test
       - uses: JS-DevTools/npm-publish@v1
         with:

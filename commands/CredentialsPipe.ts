@@ -7,7 +7,6 @@
  * file that was distributed with this source code.
  */
 
-import fs from 'fs'
 import execa from 'execa'
 import { args, BaseCommand, flags } from '@adonisjs/core/build/standalone'
 import { Credentials } from '../src/Credentials'
