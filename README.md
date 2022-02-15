@@ -7,11 +7,13 @@
   - [Configuration](#configuration)
       - [Run `ace configure`](#run-ace-configure)
       - [Modify `server.ts` file](#modify-serverts-file)
-      - [Modify `ace` file](#modify-ace-file)
       - [Modify `.adonisrs.json`](#modify-adonisrsjson)
+      - [Modify `ace` file (optional)](#modify-ace-file-optional)
+      - [Pipe credentials to command (optional)](#pipe-credentials-to-command-optional)
   - [Usage](#usage)
       - [Creating credentials](#creating-credentials)
       - [Editing credentials](#editing-credentials)
+      - [Piping credentials](#piping-credentials)
       - [Using in production](#using-in-production)
   - [How it works](#how-it-works)
 
@@ -62,7 +64,11 @@ new Ignitor(__dirname).httpServer().start().catch(console.error)
 
 This allows the credentials to be parsed and populated inside current `process.env` before the app even starts, so an `Env` provider will be able to validate values.
 
-#### Modify `ace` file
+#### Modify `.adonisrs.json`
+
+As a final step, open `.adonisrc.json` file and add `resources/credentials` to `metaFiles` section, so credentials will copied as you build your Adonis app.
+
+#### Modify `ace` file (optional)
 
 In this step you do basically the same thing as done in a step above, but for `ace` commands that need the app to be loaded, just add two new lines to the file.
 
@@ -80,9 +86,15 @@ new Ignitor(__dirname)
   .catch(console.error)
 ```
 
-#### Modify `.adonisrs.json`
+This will populates credentials into the ace process so they will be available in it.
 
-As a final step, open `.adonisrc.json` file and add `resources/credentials` to `metaFiles` section, so credentials will copied as you build your Adonis app.
+#### Pipe credentials to command (optional)
+
+Another way to make credentials visible to command, is to run that command inside a child process with secret credentials populated, for example:
+
+`node ace credentials:pipe 'ace migrations:run'`
+
+This reads credentials, decrypts them, creates a child process and populates environment with some new values from your vault and then runs the command that you specified.
 
 ## Usage
 
@@ -128,6 +140,23 @@ node ace credentials:edit --editor=nano --env=development
 ```
 
 This will decrypt the credentials file, create a temporary one and open it in the editor you specified. As you finish editing, close the file (or tab inside your editor), this will encrypt it back again and remove the temporary file, to keep you safe and sound.
+
+#### Piping credentials
+
+To pipe credentials to a command that needs them run:
+
+```bash
+# node ace credentials:pipe <command>
+# ---
+# Args
+#   command          Specify an ace command to pipe credentials to     
+# Flags
+#   --env string     Specify an environment for credentials file (default: development)
+
+node ace credentials:pipe 'ace migrations:run'
+# or
+node ace credentials:pipe 'ace migrations:run' --env=development
+```
 
 #### Using in production
 
