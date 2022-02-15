@@ -84,7 +84,8 @@
     "instructionsMd": "./build/instructions.md",
     "commands": [
       "@bitkidd/adonis-credentials/build/commands/CredentialsCreate",
-      "@bitkidd/adonis-credentials/build/commands/CredentialsEdit"
+      "@bitkidd/adonis-credentials/build/commands/CredentialsEdit",
+      "@bitkidd/adonis-credentials/build/commands/CredentialsPipe"
     ]
   },
   "dependencies": {
