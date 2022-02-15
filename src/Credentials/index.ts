@@ -78,7 +78,7 @@ export class Credentials implements CredentialsContract {
 
   private parse(obj?: Object, current?: string) {
     const object = obj || JSON.parse(this.content)
-    for (var key in object) {
+    for (const key in object) {
       const value = object[key]
       const newKey = current ? current + '_' + key : key
       if (value && typeof value === 'object') {
