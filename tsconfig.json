@@ -5,6 +5,8 @@
     "emitDecoratorMetadata": true,
     "skipLibCheck": true,
     "useDefineForClassFields": true,
-    "types": ["@adonisjs/core"]
+    "types": [
+      "@adonisjs/core"
+    ]
   }
 }
