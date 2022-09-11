@@ -7,9 +7,7 @@
  * file that was distributed with this source code.
  */
 
-import 'reflect-metadata'
-
-import test from 'japa'
+import { test } from '@japa/runner'
 import { Kernel } from '@adonisjs/core/build/standalone'
 import { ApplicationContract } from '@ioc:Adonis/Core/Application'
 
@@ -20,53 +18,32 @@ import { fs, setupApplication } from '../test-helpers'
 let app: ApplicationContract
 
 test.group('Command - Credentials Edit', (group) => {
-  group.beforeEach(async () => {
+  group.setup(async () => {
     app = await setupApplication()
+  })
+
+  group.each.setup(async () => {
     const command = new CredentialsCreate(app, new Kernel(app))
     await command.run()
   })
 
-  group.afterEach(async () => {
+  group.each.teardown(async () => {
     await fs.cleanup()
   })
 
-  test('should throw an error when credentials key file does not exist', async (assert) => {
+  test('should throw an error when credentials key file does not exist', async ({ assert }) => {
     await fs.remove('resources/credentials/test.key')
 
     const command = new CredentialsEdit(app, new Kernel(app))
-    await command.run()
 
-    assert.deepStrictEqual(
-      command.ui.testingRenderer.logs.map((log) => ({
-        ...log,
-        message: log.message.replace(/(\[.*?\])/g, '').trim(),
-      })),
-      [
-        {
-          stream: 'stderr',
-          message: `Credentials key file for 'test' environment does not exist`,
-        },
-      ]
-    )
+    assert.rejects(async () => await command.run())
   })
 
-  test('should throw an error when credentials file does not exist', async (assert) => {
+  test('should throw an error when credentials file does not exist', async ({ assert }) => {
     await fs.remove('resources/credentials/test.credentials')
 
     const command = new CredentialsEdit(app, new Kernel(app))
-    await command.run()
 
-    assert.deepStrictEqual(
-      command.ui.testingRenderer.logs.map((log) => ({
-        ...log,
-        message: log.message.replace(/(\[.*?\])/g, '').trim(),
-      })),
-      [
-        {
-          stream: 'stderr',
-          message: `Credentials file for 'test' environment does not exist`,
-        },
-      ]
-    )
+    assert.rejects(async () => await command.run())
   })
 })
