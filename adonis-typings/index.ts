@@ -1,6 +1,9 @@
 declare module '@ioc:Adonis/Addons/Credentials' {
   export interface CredentialsContract {
-    get(key?: string): string | Record<string, string>
+    get(key?: string): string | boolean | number | Record<string, string | boolean | number>
+    key(): string | null
+    content(): string
+    format(): string
     initialize(): void
   }
 
