@@ -107,7 +107,7 @@ As you configured the provider, you may now create your first credentials by run
 # ---
 # Flags
 #   --env string      Specify an environment for credentials file (default: development)
-#   --content string  Specify initial content for credentials file (default: { "hello": "world" })
+#   --format string   Specify format for the credentials file (default: yaml, available: json,yaml)
 
 node ace credentials:create
 ```
@@ -170,8 +170,9 @@ For production you should set additional environment variable `APP_CREDENTIALS_K
 
 The provider uses node.js' native crypto library and encrypts everything using *AES* cipher with a random vector, which makes your secrets very secure, with a single key that can decrypt data.
 
-Credentials while decrypted present themselves as simple JSON objects, this allows to keep variables in a very predictable and simple manner:
+Credentials while decrypted present themselves as simple files in JSON or YAML formats, this allows to keep variables in a very predictable and simple manner:
 
+**JSON**
 ```json
 {
   "google": {
@@ -179,6 +180,13 @@ Credentials while decrypted present themselves as simple JSON objects, this allo
     "secret": "your_google_secret"
   }
 }
+```
+
+**YAML**
+```yaml
+google:
+  key: "your_google_key"
+  secret: "your_google_secret"
 ```
 
 Which then is being transformed to something like this:
