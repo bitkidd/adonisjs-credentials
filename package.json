@@ -5,36 +5,36 @@
   "types": "build/adonis-typings/index.d.ts",
   "main": "build/providers/CredentialsProvider.js",
   "devDependencies": {
-    "@adonisjs/application": "^5.1.9",
-    "@adonisjs/core": "^5.4.2",
-    "@adonisjs/mrm-preset": "^5.0.2",
-    "@adonisjs/require-ts": "^2.0.9",
-    "@adonisjs/sink": "^5.2.1",
-    "@poppinss/dev-utils": "^2.0.1",
-    "@types/node": "^17.0.18",
-    "commitizen": "^4.2.4",
+    "@adonisjs/application": "^5.2.5",
+    "@adonisjs/core": "^5.8.6",
+    "@adonisjs/mrm-preset": "^5.0.3",
+    "@adonisjs/require-ts": "^2.0.12",
+    "@adonisjs/sink": "^5.4.0",
+    "@poppinss/dev-utils": "^2.0.3",
+    "@types/node": "^18.7.16",
+    "commitizen": "^4.2.5",
     "copyfiles": "^2.4.1",
     "cz-conventional-changelog": "^3.3.0",
-    "del-cli": "^4.0.1",
-    "doctoc": "^2.1.0",
-    "eslint": "^8.9.0",
-    "eslint-config-prettier": "^8.3.0",
+    "del-cli": "^5.0.0",
+    "doctoc": "^2.2.0",
+    "eslint": "^8.23.0",
+    "eslint-config-prettier": "^8.5.0",
     "eslint-plugin-adonis": "^2.1.0",
-    "eslint-plugin-prettier": "^4.0.0",
-    "github-label-sync": "^2.0.2",
-    "husky": "^7.0.4",
-    "japa": "^3.1.1",
-    "mrm": "^3.0.10",
-    "np": "^7.6.0",
-    "prettier": "^2.5.1",
+    "eslint-plugin-prettier": "^4.2.1",
+    "github-label-sync": "^2.2.0",
+    "husky": "^8.0.1",
+    "japa": "^4.0.0",
+    "mrm": "^4.1.0",
+    "np": "^7.6.2",
+    "prettier": "^2.7.1",
     "reflect-metadata": "^0.1.13",
-    "typescript": "^4.5.5"
+    "typescript": "^4.8.3"
   },
   "scripts": {
     "mrm": "mrm --preset=@adonisjs/mrm-preset",
     "pretest": "npm run lint",
-    "test": "node .bin/test.js",
-    "clean": "del build",
+    "test": "node -r @adonisjs/require-ts/build/register bin/test.ts",
+    "clean": "del-cli build",
     "copyfiles": "copyfiles \"instructions.md\" build",
     "compile": "npm run lint && npm run clean && tsc",
     "build": "npm run compile",
@@ -56,7 +56,7 @@
     "secrets"
   ],
   "author": "cc@bitkidd.dev",
-  "license": "UNLICENSED",
+  "license": "MIT",
   "bugs": {
     "url": "https://github.com/bitkidd/adonis-credentials/issues"
   },
@@ -89,8 +89,8 @@
     ]
   },
   "dependencies": {
-    "@poppinss/utils": "^3.2.0",
-    "dotenv": "^16.0.0",
+    "@poppinss/utils": "^5.0.0",
+    "dotenv": "^16.0.2",
     "execa": "^5.1.1"
   },
   "eslintConfig": {
@@ -122,5 +122,17 @@
     "bracketSpacing": true,
     "arrowParens": "always",
     "printWidth": 100
+  },
+  "mrmConfig": {
+    "core": false,
+    "license": "MIT",
+    "services": [
+      "github-actions"
+    ],
+    "minNodeVersion": "16.13.1",
+    "probotApps": [
+      "stale"
+    ],
+    "runGhActionsOnWindows": false
   }
 }
