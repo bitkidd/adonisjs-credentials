@@ -21,13 +21,14 @@ export default class CredentialsCreate extends BaseCommand {
   public env: string
 
   @flags.string({
-    description: 'Specify initial content for credentials file (default: { "hello": "world" })',
+    description: 'Specify format for the credentials file (default: yaml, available: json,yaml)',
   })
-  public content: string
+  public format: string
 
   public async run(): Promise<void> {
     const env = this.env || process.env.NODE_ENV || 'development'
-    const initialContent = this.content || '{ "hello": "world" }'
+    const format = this.format || 'yaml'
+    const initialContent = format === 'yaml' ? 'hello: world' : '{ "hello": "world" }'
     const credentialsPath = this.application.resourcesPath('credentials')
 
     const key = Vault.generateKey()
