@@ -15,11 +15,11 @@ export class Vault implements VaultContract {
   private static ivLength = 16
 
   private static prepareKey(data?: string) {
-    return createHash('sha256').update(String(data)).digest('base64').substr(0, 32)
+    return createHash('sha256').update(String(data)).digest('base64').slice(0, 32)
   }
 
   public static generateKey(length = 32) {
-    return createHash('sha256').update(randomBytes(length)).digest('base64').substr(0, length)
+    return createHash('sha256').update(randomBytes(length)).digest('base64').slice(0, length)
   }
 
   public static encrypt(data: string, key?: string): string {
@@ -42,8 +42,8 @@ export class Vault implements VaultContract {
 
   public static decrypt(data: string, key?: string): string {
     const buffer = Buffer.from(data, 'base64')
-    const iv = buffer.slice(0, this.ivLength)
-    const content = buffer.slice(this.ivLength)
+    const iv = buffer.subarray(0, this.ivLength)
+    const content = buffer.subarray(this.ivLength)
 
     if (!key) {
       throw new Error('Vault key is not set, please specify it before trying to decrypt')
