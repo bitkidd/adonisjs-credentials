@@ -11,6 +11,7 @@ import execa from 'execa'
 import fs, { promises as fsp } from 'fs'
 import { BaseCommand, flags } from '@adonisjs/core/build/standalone'
 import { Vault } from '../src/Vault'
+import { Credentials } from '../src/Credentials'
 
 export default class CredentialsEdit extends BaseCommand {
   public static commandName = 'credentials:edit'
@@ -35,33 +36,25 @@ export default class CredentialsEdit extends BaseCommand {
     const [editor, ...params] = this.editor?.split(' ') || process.env.EDITOR?.split(' ') || 'nano'
     const credentialsPath = this.application.resourcesPath('credentials')
 
-    if (!fs.existsSync(`${credentialsPath}/${env}.key`)) {
-      this.logger.error(`Credentials key file for '${env}' environment does not exist`)
-      return
-    }
-
-    if (!fs.existsSync(`${credentialsPath}/${env}.credentials`)) {
-      this.logger.error(`Credentials file for '${env}' environment does not exist`)
-      return
-    }
+    const credentials = new Credentials({ credentialsPath })
+    const content = credentials.content()
+    const format = credentials.format()
+    const key = credentials.key()
 
     const tmpFileName = this.application.helpers.string.generateRandom(16)
-    const tmpFilePath = this.application.tmpPath(`${tmpFileName}.json`)
-    const key = await fsp.readFile(`${credentialsPath}/${env}.key`)
-    const content = await fsp.readFile(`${credentialsPath}/${env}.credentials`)
-    const decryptedContent = Vault.decrypt(content.toString('utf-8'), key.toString('utf-8'))
+    const tmpFilePath = this.application.tmpPath(`${tmpFileName}.${format}`)
 
     if (!fs.existsSync(tmpFilePath)) {
       await fsp.mkdir(this.application.tmpPath(), { recursive: true })
     }
 
-    await fsp.writeFile(tmpFilePath, decryptedContent, 'utf-8')
+    await fsp.writeFile(tmpFilePath, content, 'utf-8')
 
     try {
       await execa(editor, [tmpFilePath, ...params], { stdio: 'inherit' })
 
       const tmpContent = await fsp.readFile(tmpFilePath, 'utf-8')
-      const tmpEncryptedContent = Vault.encrypt(tmpContent, key.toString('utf-8'))
+      const tmpEncryptedContent = Vault.encrypt(tmpContent, key || '')
 
       await fsp.writeFile(`${credentialsPath}/${env}.credentials`, tmpEncryptedContent)
       await fsp.unlink(tmpFilePath)
