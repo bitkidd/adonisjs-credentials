@@ -36,7 +36,7 @@ export default class CredentialsEdit extends BaseCommand {
     const [editor, ...params] = this.editor?.split(' ') || process.env.EDITOR?.split(' ') || 'nano'
     const credentialsPath = this.application.resourcesPath('credentials')
 
-    const credentials = new Credentials({ credentialsPath })
+    const credentials = new Credentials({ env, credentialsPath })
     const content = credentials.content()
     const format = credentials.format()
     const key = credentials.key()
