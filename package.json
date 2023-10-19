@@ -84,6 +84,9 @@
   },
   "adonisjs": {
     "types": "@bitkidd/adonis-credentials",
+    "providers": [
+      "@bitkidd/adonis-credentials"
+    ],
     "instructions": "./build/instructions.js",
     "instructionsMd": "./build/instructions.md",
     "commands": [
