@@ -1,6 +1,7 @@
 import { assert } from '@japa/assert'
-import { specReporter } from '@japa/spec-reporter'
-import { processCliArgs, configure, run } from '@japa/runner'
+import { fileSystem } from '@japa/file-system'
+import { expectTypeOf } from '@japa/expect-type'
+import { processCLIArgs, configure, run } from '@japa/runner'
 
 /*
 |--------------------------------------------------------------------------
@@ -15,14 +16,10 @@ import { processCliArgs, configure, run } from '@japa/runner'
 |
 | Please consult japa.dev/runner-config for the config docs.
 */
+processCLIArgs(process.argv.slice(2))
 configure({
-  ...processCliArgs(process.argv.slice(2)),
-  ...{
-    files: ['tests/**/*.spec.ts'],
-    plugins: [assert()],
-    reporters: [specReporter()],
-    importer: (filePath) => import(filePath),
-  },
+  files: ['tests/**/*.spec.ts'],
+  plugins: [assert(), expectTypeOf(), fileSystem()],
 })
 
 /*

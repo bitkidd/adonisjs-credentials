@@ -1,6 +1,5 @@
 build
 docs
-tmp
 *.md
 config.json
 .eslintrc.json

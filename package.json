@@ -1,58 +1,35 @@
 {
   "name": "@bitkidd/adonis-credentials",
-  "version": "1.3.1",
-  "description": "A credentials provider for Adonis 5.x",
-  "types": "build/adonis-typings/index.d.ts",
-  "main": "build/providers/CredentialsProvider.js",
-  "devDependencies": {
-    "@adonisjs/application": "^5.2.5",
-    "@adonisjs/core": "^5.8.6",
-    "@adonisjs/mrm-preset": "^5.0.3",
-    "@adonisjs/require-ts": "^2.0.12",
-    "@adonisjs/sink": "^5.4.0",
-    "@japa/assert": "^1.3.6",
-    "@japa/run-failed-tests": "^1.1.0",
-    "@japa/runner": "^2.1.3",
-    "@japa/spec-reporter": "^1.3.0",
-    "@poppinss/dev-utils": "^2.0.3",
-    "@types/node": "^18.7.16",
-    "commitizen": "^4.2.5",
-    "copyfiles": "^2.4.1",
-    "cz-conventional-changelog": "^3.3.0",
-    "del-cli": "^5.0.0",
-    "doctoc": "^2.2.0",
-    "eslint": "^8.23.0",
-    "eslint-config-prettier": "^8.5.0",
-    "eslint-plugin-adonis": "^2.1.0",
-    "eslint-plugin-prettier": "^4.2.1",
-    "github-label-sync": "^2.2.0",
-    "husky": "^8.0.1",
-    "japa": "^4.0.0",
-    "mrm": "^4.1.0",
-    "np": "^7.6.2",
-    "prettier": "^2.7.1",
-    "reflect-metadata": "^0.1.13",
-    "typescript": "4.5.x"
+  "version": "2.0.0",
+  "description": "Credentials manager for Adonis 6.x",
+  "type": "module",
+  "files": [
+    "build",
+    "!build/bin",
+    "!build/examples",
+    "!build/tests"
+  ],
+  "exports": {
+    ".": "./build/index.js",
+    "./editor": "./build/src/editor.js"
+  },
+  "engines": {
+    "node": ">=18.16.0"
   },
   "scripts": {
-    "mrm": "mrm --preset=@adonisjs/mrm-preset",
-    "pretest": "npm run lint",
-    "test": "node -r @adonisjs/require-ts/build/register bin/test.ts",
+    "test": "cross-env NODE_DEBUG=adonisjs:env c8 npm run quick:test",
     "clean": "del-cli build",
-    "copyfiles": "copyfiles \"instructions.md\" build",
-    "compile": "npm run lint && npm run clean && tsc",
+    "typecheck": "tsc --noEmit",
+    "precompile": "npm run lint && npm run clean",
+    "compile": "tsup-node && tsc --emitDeclarationOnly --declaration",
     "build": "npm run compile",
+    "release": "np",
+    "version": "npm run build",
     "prepublishOnly": "npm run build",
     "lint": "eslint . --ext=.ts",
     "format": "prettier --write .",
-    "commit": "git-cz",
-    "release": "np --message=\"chore(release): %s\"",
-    "version": "npm run build",
-    "sync-labels": "github-label-sync --labels ./node_modules/@adonisjs/mrm-preset/gh-labels.json bitkidd/adonis-credentials"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+ssh://git@github.com/bitkidd/adonis-credentials.git"
+    "sync-labels": "github-label-sync --labels .github/labels.json adonisjs/env",
+    "quick:test": "node --loader=ts-node/esm bin/test.ts"
   },
   "keywords": [
     "adonis",
@@ -61,86 +38,61 @@
   ],
   "author": "cc@bitkidd.dev",
   "license": "MIT",
+  "devDependencies": {
+    "@adonisjs/eslint-config": "^1.2.1",
+    "@adonisjs/prettier-config": "^1.2.1",
+    "@adonisjs/tsconfig": "^1.2.1",
+    "@japa/assert": "^2.1.0",
+    "@japa/expect-type": "^2.0.1",
+    "@japa/file-system": "^2.2.0",
+    "@japa/runner": "^3.1.1",
+    "@swc/core": "^1.3.106",
+    "@types/node": "^20.11.6",
+    "c8": "^9.1.0",
+    "cross-env": "^7.0.3",
+    "del-cli": "^5.1.0",
+    "eslint": "^8.56.0",
+    "prettier": "^3.2.4",
+    "ts-node": "^10.9.2",
+    "tsup": "^8.0.1",
+    "typescript": "^5.3.3"
+  },
+  "dependencies": {
+    "@vinejs/vine": "^1.7.0",
+    "@poppinss/utils": "^6.7.1",
+    "yaml": "^2.3.4"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/bitkidd/adonis-credentials.git"
+  },
   "bugs": {
     "url": "https://github.com/bitkidd/adonis-credentials/issues"
   },
   "homepage": "https://github.com/bitkidd/adonis-credentials#readme",
-  "files": [
-    "build/adonis-typings",
-    "build/commands",
-    "build/providers",
-    "build/src",
-    "build/instructions.js",
-    "build/instructions.md"
-  ],
-  "config": {
-    "commitizen": {
-      "path": "cz-conventional-changelog"
-    }
-  },
-  "np": {
-    "contents": ".",
-    "anyBranch": false
-  },
-  "adonisjs": {
-    "types": "@bitkidd/adonis-credentials",
-    "providers": [
-      "@bitkidd/adonis-credentials"
+  "c8": {
+    "reporter": [
+      "text",
+      "html"
     ],
-    "instructions": "./build/instructions.js",
-    "instructionsMd": "./build/instructions.md",
-    "commands": [
-      "@bitkidd/adonis-credentials/build/commands/CredentialsCreate",
-      "@bitkidd/adonis-credentials/build/commands/CredentialsEdit",
-      "@bitkidd/adonis-credentials/build/commands/CredentialsPipe"
+    "exclude": [
+      "tests/**"
     ]
   },
-  "dependencies": {
-    "@poppinss/utils": "^5.0.0",
-    "dotenv": "^16.0.2",
-    "execa": "^5.1.1",
-    "yaml": "^2.1.1"
-  },
   "eslintConfig": {
-    "extends": [
-      "plugin:adonis/typescriptPackage",
-      "prettier"
-    ],
-    "plugins": [
-      "prettier"
-    ],
-    "rules": {
-      "prettier/prettier": [
-        "error",
-        {
-          "endOfLine": "auto"
-        }
-      ]
-    }
+    "extends": "@adonisjs/eslint-config/package"
   },
-  "eslintIgnore": [
-    "build"
-  ],
-  "prettier": {
-    "trailingComma": "es5",
-    "semi": false,
-    "singleQuote": true,
-    "useTabs": false,
-    "quoteProps": "consistent",
-    "bracketSpacing": true,
-    "arrowParens": "always",
-    "printWidth": 100
-  },
-  "mrmConfig": {
-    "core": false,
-    "license": "MIT",
-    "services": [
-      "github-actions"
+  "prettier": "@adonisjs/prettier-config",
+  "tsup": {
+    "entry": [
+      "./index.ts",
+      "./src/editor.ts"
     ],
-    "minNodeVersion": "16.13.1",
-    "probotApps": [
-      "stale"
-    ],
-    "runGhActionsOnWindows": false
+    "outDir": "./build",
+    "clean": true,
+    "format": "esm",
+    "dts": false,
+    "sourcemap": true,
+    "target": "esnext"
   }
 }
