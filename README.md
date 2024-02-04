@@ -1,25 +1,27 @@
 <!-- START doctoc generated TOC please keep comment here to allow auto update -->
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
+
 ## Table of contents
 
 - [Adonis Credentials](#adonis-credentials)
   - [Installation](#installation)
   - [Configuration](#configuration)
-      - [Run `ace configure`](#run-ace-configure)
-      - [Modify `server.ts` file](#modify-serverts-file)
-      - [Modify `.adonisrs.json`](#modify-adonisrsjson)
-      - [Modify `ace` file (optional)](#modify-ace-file-optional)
-      - [Pipe credentials to command (optional)](#pipe-credentials-to-command-optional)
+    - [Run `ace configure`](#run-ace-configure)
+    - [Modify `server.ts` file](#modify-serverts-file)
+    - [Modify `.adonisrs.json`](#modify-adonisrsjson)
+    - [Modify `ace` file (optional)](#modify-ace-file-optional)
+    - [Pipe credentials to command (optional)](#pipe-credentials-to-command-optional)
   - [Usage](#usage)
-      - [Creating credentials](#creating-credentials)
-      - [Editing credentials](#editing-credentials)
-      - [Piping credentials](#piping-credentials)
-      - [Using in production](#using-in-production)
+    - [Creating credentials](#creating-credentials)
+    - [Editing credentials](#editing-credentials)
+    - [Piping credentials](#piping-credentials)
+    - [Using in production](#using-in-production)
   - [How it works](#how-it-works)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
 # Adonis Credentials
+
 > adonis, credentials
 
 [![workflow-image]][workflow-url] [![npm-image]][npm-url] [![license-image]][license-url] [![typescript-image]][typescript-url]
@@ -29,6 +31,7 @@ Adonis Credentials is created to help manage multiple environment secrets, share
 ## Installation
 
 To install the provider run:
+
 ```bash
 npm install @bitkidd/adonis-credentials
 # or
@@ -80,10 +83,7 @@ const { Credentials } = require('@bitkidd/adonis-credentials/build/src/Credentia
 // ...
 
 new Credentials().initialize() // <--- Insert credentials initialization here, before the Ignitor
-new Ignitor(__dirname)
-  .ace()
-  .handle(process.argv.slice(2))
-  .catch(console.error)
+new Ignitor(__dirname).ace().handle(process.argv.slice(2)).catch(console.error)
 ```
 
 This will populates credentials into the ace process so they will be available in it.
@@ -112,7 +112,7 @@ As you configured the provider, you may now create your first credentials by run
 node ace credentials:create
 ```
 
-This will create a new directory in your `resources` folder, called `credentials` and will add there two new files, `development.key` and `development.credentials`. 
+This will create a new directory in your `resources` folder, called `credentials` and will add there two new files, `development.key` and `development.credentials`.
 
 Obviously, the `.key` file keeps your password to the credentials file, **do not commit any .key files to your git repo**, please check your `.gitignore` for `*.key` exclusion rule.
 
@@ -149,7 +149,7 @@ To pipe credentials to a command that needs them run:
 # node ace credentials:pipe <command>
 # ---
 # Args
-#   command          Specify an ace command to pipe credentials to     
+#   command          Specify an ace command to pipe credentials to
 # Flags
 #   --env string     Specify an environment for credentials file (default: development)
 
@@ -168,11 +168,12 @@ For production you should set additional environment variable `APP_CREDENTIALS_K
 
 ## How it works
 
-The provider uses node.js' native crypto library and encrypts everything using *AES* cipher with a random vector, which makes your secrets very secure, with a single key that can decrypt data.
+The provider uses node.js' native crypto library and encrypts everything using _AES_ cipher with a random vector, which makes your secrets very secure, with a single key that can decrypt data.
 
 Credentials while decrypted present themselves as simple files in JSON or YAML formats, this allows to keep variables in a very predictable and simple manner:
 
 **JSON**
+
 ```json
 {
   "google": {
@@ -183,10 +184,11 @@ Credentials while decrypted present themselves as simple files in JSON or YAML f
 ```
 
 **YAML**
+
 ```yaml
 google:
-  key: "your_google_key"
-  secret: "your_google_secret"
+  key: 'your_google_key'
+  secret: 'your_google_secret'
 ```
 
 Which then is being transformed to something like this:
@@ -200,12 +202,9 @@ And then populated to `process.env`, as this is done before Adonis.js `Env` prov
 
 [workflow-image]: https://img.shields.io/github/workflow/status/bitkidd/adonis-credentials/test?style=for-the-badge&logo=github
 [workflow-url]: https://github.com/bitkidd/adonis-credentials/actions/workflows/test.yml
-
 [npm-image]: https://img.shields.io/npm/v/@bitkidd/adonis-credentials.svg?style=for-the-badge&logo=npm
-[npm-url]: https://npmjs.org/package/@bitkidd/adonis-credentials "npm"
-
+[npm-url]: https://npmjs.org/package/@bitkidd/adonis-credentials 'npm'
 [license-image]: https://img.shields.io/npm/l/@bitkidd/adonis-credentials?color=blueviolet&style=for-the-badge
-[license-url]: LICENSE.md "license"
-
+[license-url]: LICENSE.md 'license'
 [typescript-image]: https://img.shields.io/badge/Typescript-294E80.svg?style=for-the-badge&logo=typescript
-[typescript-url]:  "typescript"
+[typescript-url]: "typescript"

@@ -1,0 +1,8 @@
+{{#var passedValue = value}}
+{{#var fileName = `${env}.key`}}
+{{{
+  exports({
+    to: app.makePath('resources/credentials', fileName)
+  })
+}}}
+{{{ passedValue }}}

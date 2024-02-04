@@ -1,0 +1,8 @@
+{{#var passedValue = value}}
+{{#var fileName = `${randomId}.${format}`}}
+{{{
+  exports({
+    to: app.tmpPath(fileName)
+  })
+}}}
+{{ passedValue }}

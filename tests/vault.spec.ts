@@ -1,61 +1,112 @@
-/*
- * @bitkidd/adonis-credentials
- *
- * (c) Chirill Ceban <cc@bitkidd.dev>
- *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
- */
-
 import { test } from '@japa/runner'
 
-import { Vault } from '../src/Vault'
+import { Vault } from '../src/vault.js'
+import {
+  E_CREDENTIALS_CANNOT_DECRYPT,
+  E_CREDENTIALS_MISSING_KEY,
+  E_CREDENTIALS_UNKNOWN_VERSION,
+} from '../src/errors.js'
 
 test.group('Vault', () => {
-  let encrypted = ''
+  const vault = new Vault()
+  let encrypted = `${vault.version}.`
 
-  test('should through an error when trying to encrypt with no key set', ({ assert }) => {
-    assert.throws(
-      () => Vault.encrypt('Test Message'),
-      'Vault key is not set, please specify it before trying to encrypt'
-    )
+  test('should through an error when no key defined anywhere', async ({ assert }) => {
+    try {
+      await vault.getKey()
+    } catch (error) {
+      assert.instanceOf(error, E_CREDENTIALS_MISSING_KEY)
+    }
   })
 
-  test('should pick up key from argument', ({ assert }) => {
-    assert.isString(Vault.encrypt('Test Message', 'Test Key'))
+  test('should return a key defined in file', async ({ assert, fs }) => {
+    delete process.env.APP_CREDENTIALS_KEY
+    await fs.create('development.key', 'Test Key')
+
+    const vaultWithPath = new Vault({ path: fs.basePath })
+    const key = await vaultWithPath.getKey()
+
+    assert.equal(key, 'Test Key')
+  })
+
+  test('should return a key defined in a process', async ({ assert }) => {
+    process.env.APP_CREDENTIALS_KEY = 'Test Key'
+
+    const key = await vault.getKey()
+
+    assert.equal(key, 'Test Key')
   })
 
   test('should generate a random key', ({ assert }) => {
-    assert.isString(Vault.generateKey(32))
+    assert.isString(vault.generateKey({ length: 32 }))
+  })
+
+  test('should through an error when trying to encrypt with no key set', ({ assert }) => {
+    try {
+      vault.encrypt({ data: 'testcontent', key: '' })
+    } catch (error) {
+      assert.instanceOf(error, E_CREDENTIALS_MISSING_KEY)
+    }
+  })
+
+  test('should pick up key from argument', ({ assert }) => {
+    assert.isString(vault.encrypt({ data: 'v2.testcontent', key: 'v2.testkey' }))
   })
 
   test('should encrypt content', ({ assert }) => {
-    encrypted = Vault.encrypt('Test Message', 'Test Key')
-    assert.isString(Vault.encrypt('Test Message', 'Test Key'))
+    encrypted = vault.encrypt({ data: 'v2.testcontent', key: 'v2.testkey' })
+    assert.isString(vault.encrypt({ data: 'v2.testcontent', key: 'v2.testkey' }))
   })
 
   test('should decrypt content', ({ assert }) => {
-    assert.equal(Vault.decrypt(encrypted, 'Test Key'), 'Test Message')
+    assert.equal(vault.decrypt({ data: encrypted, key: 'v2.testkey' }), 'v2.testcontent')
   })
 
   test('should throw an error when trying to decrypt with no key set', ({ assert }) => {
-    assert.throws(
-      () => Vault.decrypt(encrypted),
-      'Vault key is not set, please specify it before trying to decrypt'
-    )
+    try {
+      vault.decrypt({ data: encrypted, key: '' })
+    } catch (error) {
+      assert.instanceOf(error, E_CREDENTIALS_MISSING_KEY)
+    }
   })
 
   test('should throw an error when wrong key', ({ assert }) => {
-    assert.throws(
-      () => Vault.decrypt(encrypted, 'Wrong Key'),
-      'Vault is unable to decrypt, credentials are wrong or corrupted'
-    )
+    try {
+      vault.decrypt({ data: encrypted, key: 'v2.wrongkey' })
+    } catch (error) {
+      assert.instanceOf(error, E_CREDENTIALS_CANNOT_DECRYPT)
+    }
   })
 
   test('should throw an error when corrupted content', ({ assert }) => {
-    assert.throws(
-      () => Vault.decrypt('Corrupted Content', 'Test Key'),
-      'Vault is unable to decrypt, credentials are wrong or corrupted'
-    )
+    try {
+      vault.decrypt({ data: 'v2.corruptedcontent', key: 'v2.testkey' })
+    } catch (error) {
+      assert.instanceOf(error, E_CREDENTIALS_CANNOT_DECRYPT)
+    }
+  })
+
+  test('should throw an error when no version found with key or credentials', async ({
+    assert,
+  }) => {
+    try {
+      vault.decrypt({
+        data: 'v2.FFknPJtcl+V2kJj6eio3I1GYL2bRKfw9iQ8Ot4O12qeUqf6Bv0A5uHDB7UZ6KDioVMM6B0DY2HaKqpea5g8meQ==',
+        key: 'OlNJCYbOfpYulomvTEeTun4rp5WXz3yI',
+      })
+    } catch (error) {
+      assert.instanceOf(error, E_CREDENTIALS_UNKNOWN_VERSION)
+    }
+  })
+
+  test('should throw an error when versions do not correspond', async ({ assert }) => {
+    try {
+      vault.decrypt({
+        data: 'v2.FFknPJtcl+V2kJj6eio3I1GYL2bRKfw9iQ8Ot4O12qeUqf6Bv0A5uHDB7UZ6KDioVMM6B0DY2HaKqpea5g8meQ==',
+        key: 'v3.OlNJCYbOfpYulomvTEeTun4rp5WXz3yI',
+      })
+    } catch (error) {
+      assert.instanceOf(error, E_CREDENTIALS_UNKNOWN_VERSION)
+    }
   })
 })

@@ -1,35 +1,43 @@
 {
-  "name": "@bitkidd/adonis-credentials",
+  "name": "@bitkidd/adonisjs-credentials",
   "version": "2.0.0",
   "description": "Credentials manager for Adonis 6.x",
   "type": "module",
   "files": [
-    "build",
-    "!build/bin",
-    "!build/examples",
-    "!build/tests"
+    "build/commands",
+    "build/src",
+    "build/stubs",
+    "build/index.d.ts",
+    "build/index.js",
+    "build/configure.d.ts",
+    "build/configure.js"
   ],
+  "main": "build/index.js",
   "exports": {
     ".": "./build/index.js",
-    "./editor": "./build/src/editor.js"
+    "./commands": "./build/commands/main.js"
   },
   "engines": {
     "node": ">=18.16.0"
   },
   "scripts": {
-    "test": "cross-env NODE_DEBUG=adonisjs:env c8 npm run quick:test",
     "clean": "del-cli build",
+    "copy:templates": "copyfiles \"stubs/**/*.stub\" build",
     "typecheck": "tsc --noEmit",
-    "precompile": "npm run lint && npm run clean",
-    "compile": "tsup-node && tsc --emitDeclarationOnly --declaration",
-    "build": "npm run compile",
-    "release": "np",
-    "version": "npm run build",
-    "prepublishOnly": "npm run build",
     "lint": "eslint . --ext=.ts",
     "format": "prettier --write .",
-    "sync-labels": "github-label-sync --labels .github/labels.json adonisjs/env",
-    "quick:test": "node --loader=ts-node/esm bin/test.ts"
+    "quick:test": "node --import=./tsnode.esm.js --enable-source-maps bin/test.ts",
+    "pretest": "npm run lint",
+    "test": "c8 npm run quick:test",
+    "precompile": "npm run lint && npm run clean",
+    "compile": "tsc",
+    "postcompile": "npm run copy:templates && npm run index:commands",
+    "build": "npm run compile",
+    "index:commands": "adonis-kit index build/commands",
+    "postbuild": "npm run copy:templates",
+    "release": "np",
+    "version": "npm run build",
+    "prepublishOnly": "npm run build"
   },
   "keywords": [
     "adonis",
@@ -39,6 +47,7 @@
   "author": "cc@bitkidd.dev",
   "license": "MIT",
   "devDependencies": {
+    "@adonisjs/core": "^6.2.2",
     "@adonisjs/eslint-config": "^1.2.1",
     "@adonisjs/prettier-config": "^1.2.1",
     "@adonisjs/tsconfig": "^1.2.1",
@@ -46,20 +55,26 @@
     "@japa/expect-type": "^2.0.1",
     "@japa/file-system": "^2.2.0",
     "@japa/runner": "^3.1.1",
-    "@swc/core": "^1.3.106",
-    "@types/node": "^20.11.6",
+    "@swc/core": "^1.3.107",
+    "@types/node": "^20.11.16",
     "c8": "^9.1.0",
+    "copyfiles": "^2.4.1",
     "cross-env": "^7.0.3",
     "del-cli": "^5.1.0",
     "eslint": "^8.56.0",
-    "prettier": "^3.2.4",
+    "prettier": "^3.2.5",
     "ts-node": "^10.9.2",
-    "tsup": "^8.0.1",
     "typescript": "^5.3.3"
   },
+  "peerDependencies": {
+    "@adonisjs/core": "^6.2.0"
+  },
   "dependencies": {
-    "@vinejs/vine": "^1.7.0",
+    "@adonisjs/assembler": "^7.1.1",
     "@poppinss/utils": "^6.7.1",
+    "@poppinss/validator-lite": "^1.0.3",
+    "dotenv": "^16.4.1",
+    "execa": "^8.0.1",
     "yaml": "^2.3.4"
   },
   "repository": {
@@ -82,17 +97,5 @@
   "eslintConfig": {
     "extends": "@adonisjs/eslint-config/package"
   },
-  "prettier": "@adonisjs/prettier-config",
-  "tsup": {
-    "entry": [
-      "./index.ts",
-      "./src/editor.ts"
-    ],
-    "outDir": "./build",
-    "clean": true,
-    "format": "esm",
-    "dts": false,
-    "sourcemap": true,
-    "target": "esnext"
-  }
+  "prettier": "@adonisjs/prettier-config"
 }

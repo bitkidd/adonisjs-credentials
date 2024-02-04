@@ -1,0 +1,10 @@
+{{{
+  exports({
+    to: app.startPath('credentials.ts')
+  })
+}}}
+import { Credentials } from '@bitkidd/adonisjs-credentials'
+
+export default await Credentials.create({
+  HELLO: Credentials.schema.string(),
+})
