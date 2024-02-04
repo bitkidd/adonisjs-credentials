@@ -161,11 +161,11 @@ The new version introduced one main change you'll have to apply manually. You ha
 
 Another thing that has changed is the default file format for `.credentials`, it will always be YAML from now. JSON files will still work, but YAML is just way easier to format and work with.
 
-[workflow-image]: https://img.shields.io/github/workflow/status/bitkidd/adonis-credentials/test?style=for-the-badge&logo=github
-[workflow-url]: https://github.com/bitkidd/adonis-credentials/actions/workflows/test.yml
-[npm-image]: https://img.shields.io/npm/v/@bitkidd/adonis-credentials.svg?style=for-the-badge&logo=npm
-[npm-url]: https://npmjs.org/package/@bitkidd/adonis-credentials 'npm'
-[license-image]: https://img.shields.io/npm/l/@bitkidd/adonis-credentials?color=blueviolet&style=for-the-badge
+[workflow-image]: https://img.shields.io/github/workflow/status/bitkidd/adonisjs-credentials/test?style=for-the-badge&logo=github
+[workflow-url]: https://github.com/bitkidd/adonisjs-credentials/actions/workflows/test.yml
+[npm-image]: https://img.shields.io/npm/v/@bitkidd/adonisjs-credentials.svg?style=for-the-badge&logo=npm
+[npm-url]: https://npmjs.org/package/@bitkidd/adonisjs-credentials 'npm'
+[license-image]: https://img.shields.io/npm/l/@bitkidd/adonisjs-credentials?color=blueviolet&style=for-the-badge
 [license-url]: LICENSE.md 'license'
 [typescript-image]: https://img.shields.io/badge/Typescript-294E80.svg?style=for-the-badge&logo=typescript
 [typescript-url]: "typescript"
