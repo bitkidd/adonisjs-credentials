@@ -14,6 +14,7 @@
     - [Editing credentials](#editing-credentials)
     - [Using in production](#using-in-production)
   - [How it works](#how-it-works)
+  - [How to update from v1 to v2](#how-to-update-from-v1-to-v2)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
@@ -153,6 +154,12 @@ Which then is being transformed to something like this:
 GOOGLE_KEY=your_google_key
 GOOGLE_SECRET=your_google_secret
 ```
+
+## How to update from v1 to v2
+
+The new version introduced one main change you'll have to apply manually. You have to add `v2.` to both of your `.key` and `.credentials` files. This will allow in the future change encryption algo without breaking things.
+
+Another thing that has changed is the default file format for `.credentials`, it will always be YAML from now. JSON files will still work, but YAML is just way easier to format and work with.
 
 [workflow-image]: https://img.shields.io/github/workflow/status/bitkidd/adonis-credentials/test?style=for-the-badge&logo=github
 [workflow-url]: https://github.com/bitkidd/adonis-credentials/actions/workflows/test.yml
