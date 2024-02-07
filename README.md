@@ -12,6 +12,8 @@
   - [Usage](#usage)
     - [Creating credentials](#creating-credentials)
     - [Editing credentials](#editing-credentials)
+    - [Credentials schema](#credentials-schema)
+    - [Getting credentials](#getting-credentials)
     - [Using in production](#using-in-production)
   - [How it works](#how-it-works)
   - [How to update from v1 to v2](#how-to-update-from-v1-to-v2)
@@ -127,6 +129,68 @@ node ace credentials:edit --editor=nano --env=development
 You can also add `EDITOR='code --wait'` to your `.env` file to omit `--editor` flag.
 
 This will decrypt the credentials file, create a temporary one and open it in the editor you specified. As you finish editing, close the file (or tab inside your editor), this will encrypt it back again and remove the temporary file, to keep you safe and sound.
+
+#### Credentials schema
+
+Credentials storage mimics core AdonisJS `env` package and provides the same schema validation.
+
+Your newly created `#start/credentials` file looks like this:
+
+```ts
+import { Credentials } from '@bitkidd/adonisjs-credentials'
+
+export default await Credentials.create({
+  HELLO: Credentials.schema.string(),
+})
+```
+
+And you can easily include your database credentials inside it likewise:
+
+```ts
+import { Credentials } from '@bitkidd/adonisjs-credentials'
+
+export default await Credentials.create({
+  HELLO: Credentials.schema.string(),
+
+  DB_HOST: Credentials.schema.string({ format: 'host' }),
+  DB_PORT: Credentials.schema.number(),
+  DB_USER: Credentials.schema.string(),
+  DB_PASSWORD: Credentials.schema.string.optional(),
+  DB_DATABASE: Credentials.schema.string(),
+})
+```
+
+#### Getting credentials
+
+To get your secret from credentials storage you can import directly `#starts/credentials`. Foe example:
+
+```ts
+import credentials from '#start/credentials'
+import { defineConfig } from '@adonisjs/lucid'
+
+const dbConfig = defineConfig({
+  connection: 'postgres',
+  connections: {
+    postgres: {
+      client: 'pg',
+      connection: {
+        host: credentials.get('DB_HOST'),
+        port: credentials.get('DB_PORT'),
+        user: credentials.get('DB_USER'),
+        password: credentials.get('DB_PASSWORD'),
+        database: credentials.get('DB_DATABASE'),
+      },
+      migrations: {
+        naturalSort: true,
+        paths: ['database/migrations'],
+      },
+      debug: true,
+    },
+  },
+})
+
+export default dbConfig
+```
 
 #### Using in production
 
