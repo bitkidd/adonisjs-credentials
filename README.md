@@ -4,6 +4,7 @@
 ## Table of contents
 
 - [AdonisJS Credentials](#adonisjs-credentials)
+  - [Why it exists?](#why-it-exists)
   - [Installation](#installation)
   - [Configuration](#configuration)
     - [Run `ace configure`](#run-ace-configure)
@@ -29,6 +30,16 @@
 AdonisJS Credentials is created to help you manage multiple environment secrets, share them securely and even keep them inside your repo.
 
 Inspired by Rails Credentials.
+
+## Why it exists?
+
+Let's say you decided to build a real world app and your app will connect to a database, a mail provider, it will have some social authentication, you may upload files to a cloud storage and here you are, with +/- 15-20 secret keys that you'll have to manage in your `.env` file, share with your team and somehow sync with he server.
+
+That's a tedious task, trust me. One of my apps has 100+ secrets and all of them had to be set up by hand.
+
+Here comes this package, it allows you to take all of these secrets and keys, pack them into an easily readable `.yaml` file, encrypt its content into a very long secure string and keep it inside you git repo.
+
+This way you, your team and your server can get access to all of these secrets just by reading this string kept in a `.credentials` file and all what they need is a `.key` file or its content set in a single `.env` variable `APP_CREDENTIALS_KEY`.
 
 ## Installation
 
